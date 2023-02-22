@@ -14,14 +14,16 @@ async function main() {
     QuoterABI.abi,
     provider,
   );
-  const quotedAmountOut = await quoterContract.quoteExactInputSingle.staticCall(
-    tokenInAddress,
-    tokenOutAddress,
-    3000,
-    ethers.parseUnits('1', tokenInDecimals).toString(),
-    0,
-  );
-  console.log(ethers.formatUnits(quotedAmountOut, tokenOutDecimals));
+  setInterval(async () => {
+    const quotedAmountOut = await quoterContract.quoteExactInputSingle.staticCall(
+      tokenInAddress,
+      tokenOutAddress,
+      500,
+      ethers.parseUnits('1', tokenInDecimals).toString(),
+      0,
+    );
+    console.log(ethers.formatUnits(quotedAmountOut, tokenOutDecimals));
+  }, 2000);
 }
 
 main();
