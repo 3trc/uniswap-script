@@ -8,12 +8,19 @@ import { ContractRunner } from 'ethers/types/providers';
 
 const secret = require('../.secret.json');
 
+function createERC20(
+  address: string,
+  runner?: ContractRunner | null | undefined,
+) {
+  return new ethers.Contract(address, ERC20_ABI.abi, runner);
+}
+
 async function createToken(
   address: string,
   runner?: ContractRunner | null | undefined,
   chainId = 1,
 ) {
-  const erc20 = new ethers.Contract(address, ERC20_ABI.abi, runner);
+  const erc20 = createERC20(address, runner);
   const [symbol, name, decimals]: [string, string, bigint] = await Promise.all([
     erc20.symbol(),
     erc20.name(),
@@ -26,9 +33,11 @@ async function main() {
   const provider = new ethers.JsonRpcProvider(secret.rpcUrl);
   const wallet = new ethers.Wallet(secret.privateKey, provider);
   console.log(wallet.address);
-  const address = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
-  const token = await createToken(address, provider, 1);
-  console.log(token);
+  const [tokenIn, tokenOut] = await Promise.all([
+    createToken('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', provider, 1),
+    createToken('0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', provider, 1),
+  ]);
+  console.log(tokenIn, tokenOut);
 }
 
 main();
