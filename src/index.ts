@@ -17,8 +17,9 @@ async function main() {
     ERC20_ABI.abi,
     provider,
   );
-  const a = await uniToken.symbol();
-  console.log(a);
+  const d = await uniToken.decimals();
+  const a = await uniToken.balanceOf(wallet.address);
+  console.log(ethers.formatUnits(a, d));
 }
 
 main();
