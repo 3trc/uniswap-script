@@ -34,10 +34,17 @@ async function main() {
   const wallet = new ethers.Wallet(secret.privateKey, provider);
   console.log(wallet.address);
   const [tokenIn, tokenOut] = await Promise.all([
-    createToken('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', provider, 1),
-    createToken('0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', provider, 1),
+    createToken('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', provider, 5),
+    createToken('0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', provider, 5),
   ]);
   console.log(tokenIn, tokenOut);
+  const poolAddress = computePoolAddress({
+    factoryAddress: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+    tokenA: tokenIn,
+    tokenB: tokenOut,
+    fee: 3000,
+  });
+  console.log(poolAddress);
 }
 
 main();
