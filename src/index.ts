@@ -60,8 +60,16 @@ async function main() {
     provider,
   );
 
+  // console.log(quoterContract.staticCall);
 
-
+  const quotedAmountOut = await quoterContract.quoteExactInputSingle.staticCall(
+    token0,
+    token1,
+    fee,
+    ethers.parseUnits('1', 18).toString(),
+    0,
+  );
+  console.log(quotedAmountOut);
 }
 
 main();
