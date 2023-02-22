@@ -60,8 +60,6 @@ async function main() {
     provider,
   );
 
-  // console.log(quoterContract.staticCall);
-
   const quotedAmountOut = await quoterContract.quoteExactInputSingle.staticCall(
     token0,
     token1,
