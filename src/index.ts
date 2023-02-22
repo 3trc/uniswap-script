@@ -1,2 +1,12 @@
+import { ethers } from 'ethers';
 
-console.log('你好，世界');
+const secret = require('../.secret.json');
+
+async function main() {
+  const provider = new ethers.JsonRpcProvider(secret.rpcUrl);
+  const wallet = new ethers.Wallet(secret.privateKey, provider);
+  console.log('你好，世界');
+  console.log(wallet.address);
+}
+
+main();

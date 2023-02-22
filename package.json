@@ -11,6 +11,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@types/node": "^18.14.0",
     "ethers": "^6.0.5"
   }
 }
