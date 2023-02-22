@@ -6,7 +6,8 @@ import Quoter from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Qu
 import { Token } from '@uniswap/sdk-core';
 import { ContractRunner } from 'ethers/types/providers';
 
-
+const POOL_FACTORY_CONTRACT_ADDRESS = '0x1F98431c8aD98523631AE4a59f267346ea31F984';
+const QUOTER_CONTRACT_ADDRESS = '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6';
 
 const secret = require('../.secret.json');
 
@@ -41,7 +42,7 @@ async function main() {
   ]);
   console.log(tokenIn, tokenOut);
   const poolAddress = computePoolAddress({
-    factoryAddress: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+    factoryAddress: POOL_FACTORY_CONTRACT_ADDRESS,
     tokenA: tokenIn,
     tokenB: tokenOut,
     fee: 3000,
@@ -55,11 +56,11 @@ async function main() {
   ]);
   console.log(token0, token1, fee);
   const quoterContract = new ethers.Contract(
-    '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6',
+    QUOTER_CONTRACT_ADDRESS,
     Quoter.abi,
     provider,
   );
-
+  console.log(token0, token1, fee);
   const quotedAmountOut = await quoterContract.quoteExactInputSingle.staticCall(
     token0,
     token1,
