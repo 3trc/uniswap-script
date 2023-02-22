@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import { computePoolAddress } from '@uniswap/v3-sdk';
 import ERC20_ABI from '@openzeppelin/contracts/build/contracts/ERC20.json';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
+import Quoter from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json';
 import { Token } from '@uniswap/sdk-core';
 import { ContractRunner } from 'ethers/types/providers';
 
@@ -53,6 +54,14 @@ async function main() {
     poolContract.fee(),
   ]);
   console.log(token0, token1, fee);
+  const quoterContract = new ethers.Contract(
+    '0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6',
+    Quoter.abi,
+    provider,
+  );
+
+
+
 }
 
 main();
