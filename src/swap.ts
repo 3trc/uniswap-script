@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import { computePoolAddress, Pool, Route, SwapQuoter } from '@uniswap/v3-sdk';
+import { computePoolAddress, Pool, Route, SwapQuoter, Trade } from '@uniswap/v3-sdk';
 
 const secret = require('../.secret.json');
 
@@ -101,8 +101,23 @@ async function getOutputQuote(route: Route<Currency, Currency>) {
 async function main() {
   const route = await GetRoute();
   // console.log(route);
-  const a = await getOutputQuote(route);
-  console.log(a);
+  const amountOut = await getOutputQuote(route);
+  console.log(amountOut);
+
+  const uncheckedTrade = Trade.createUncheckedTrade({
+    route,
+    inputAmount: CurrencyAmount.fromRawAmount(
+      TokenIn,
+      ethers.parseUnits('1', TokenIn.decimals).toString(),
+    ),
+    outputAmount: CurrencyAmount.fromRawAmount(
+      TokenOut,
+      amountOut.toString(),
+    ),
+    tradeType: 0,
+  });
+
+  console.log(uncheckedTrade);
 }
 
 main();
