@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import ERC20_ABI from '@openzeppelin/contracts/build/contracts/ERC20.json';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
 import { Token } from '@uniswap/sdk-core';
-import { computePoolAddress, Pool } from '@uniswap/v3-sdk';
+import { computePoolAddress, Pool, Route } from '@uniswap/v3-sdk';
 
 const secret = require('../.secret.json');
 
@@ -94,7 +94,7 @@ async function createPool(tokenInAddress: string, tokenOutAddress: string) {
       poolContract.liquidity(),
       poolContract.slot0(),
     ]);
-  return new Pool(
+  const pool = new Pool(
     tokenIn,
     tokenOut,
     fee,
@@ -102,4 +102,10 @@ async function createPool(tokenInAddress: string, tokenOutAddress: string) {
     liquidity.toString(),
     Number(slot0[1]),
   );
+  const swapRoute = new Route(
+    [pool],
+    tokenIn,
+    tokenOut,
+  );
+  return swapRoute;
 }
