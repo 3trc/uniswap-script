@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { Token } from '@uniswap/sdk-core';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import { computePoolAddress, Pool } from '@uniswap/v3-sdk';
+import { computePoolAddress, Pool, Route } from '@uniswap/v3-sdk';
 
 const secret = require('../.secret.json');
 
@@ -63,9 +63,19 @@ const GetPool = async () => {
   );
 };
 
-async function main() {
+export
+const GetRoute = async () => {
   const pool = await GetPool();
-  console.log(pool);
+  return new Route(
+    [pool],
+    TokenIn,
+    TokenOut,
+  );
+};
+
+async function main() {
+  const route = await GetRoute();
+  console.log(route);
 }
 
 main();
