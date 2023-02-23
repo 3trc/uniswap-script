@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { Token } from '@uniswap/sdk-core';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import { computePoolAddress } from '@uniswap/v3-sdk';
+import { computePoolAddress, Pool } from '@uniswap/v3-sdk';
 
 const secret = require('../.secret.json');
 
@@ -47,8 +47,25 @@ const PoolContract = new ethers.Contract(
   Provider,
 );
 
+export
+const GetPool = async () => {
+  const [liquidity, slot0] = await Promise.all([
+    PoolContract.liquidity(),
+    PoolContract.slot0(),
+  ]);
+  return new Pool(
+    TokenIn,
+    TokenOut,
+    PoolFee,
+    slot0[0].toString(),
+    liquidity.toString(),
+    Number(slot0[1]),
+  );
+};
+
 async function main() {
-  console.log(await PoolContract.getAddress());
+  const pool = await GetPool();
+  console.log(pool);
 }
 
 main();
