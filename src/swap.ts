@@ -87,20 +87,22 @@ async function getOutputQuote(route: Route<Currency, Currency>) {
     0,
     {
       useQuoterV2: true,
-    }
-  )
+    },
+  );
 
   const quoteCallReturnData = await provider.call({
     to: QUOTER_CONTRACT_ADDRESS,
     data: calldata,
   });
 
-  return ethers.utils.defaultAbiCoder.decode(['uint256'], quoteCallReturnData)
+  return new ethers.AbiCoder().decode(['uint256'], quoteCallReturnData);
 }
 
 async function main() {
   const route = await GetRoute();
-  console.log(route);
+  // console.log(route);
+  const a = await getOutputQuote(route);
+  console.log(a);
 }
 
 main();
