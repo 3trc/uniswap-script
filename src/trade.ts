@@ -2,8 +2,11 @@ import { Pool } from '@uniswap/v3-sdk';
 import { createERC20Token, createPool, getPoolInfo } from './erc20';
 
 async function swap(tokenInAddress: string, tokenOutAddress: string) {
-  const pool = await createPool(tokenInAddress, tokenOutAddress);
-  console.log(pool);
+  const [tokenIn, tokenOut] = await Promise.all([
+    createERC20Token(tokenInAddress),
+    createERC20Token(tokenOutAddress),
+  ]);
+  console.log(tokenIn, tokenOut);
 }
 
 async function main() {
