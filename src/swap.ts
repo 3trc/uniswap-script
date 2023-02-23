@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
-import { Token } from '@uniswap/sdk-core';
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import { computePoolAddress, Pool, Route } from '@uniswap/v3-sdk';
+import { computePoolAddress, Pool, Route, SwapQuoter } from '@uniswap/v3-sdk';
 
 const secret = require('../.secret.json');
 
@@ -13,6 +13,9 @@ const ChainId = 1;
 
 export
 const POOL_FACTORY_CONTRACT_ADDRESS = '0x1F98431c8aD98523631AE4a59f267346ea31F984';
+
+export
+const QUOTER_CONTRACT_ADDRESS = '0x61fFE014bA17989E743c5F6cB21bF9697530B21e';
 
 export
 const PoolFee = 500;
@@ -72,6 +75,28 @@ const GetRoute = async () => {
     TokenOut,
   );
 };
+
+async function getOutputQuote(route: Route<Currency, Currency>) {
+  const provider = Provider;
+  const { calldata } = await SwapQuoter.quoteCallParameters(
+    route,
+    CurrencyAmount.fromRawAmount(
+      TokenIn,
+      ethers.parseUnits('1', TokenIn.decimals).toString(),
+    ),
+    0,
+    {
+      useQuoterV2: true,
+    }
+  )
+
+  const quoteCallReturnData = await provider.call({
+    to: QUOTER_CONTRACT_ADDRESS,
+    data: calldata,
+  });
+
+  return ethers.utils.defaultAbiCoder.decode(['uint256'], quoteCallReturnData)
+}
 
 async function main() {
   const route = await GetRoute();
