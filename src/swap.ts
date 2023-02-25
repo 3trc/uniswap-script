@@ -103,6 +103,7 @@ async function main() {
   // console.log(route);
   const amountOut = await getOutputQuote(route);
   console.log(amountOut);
+  console.log(ethers.formatUnits(amountOut.toString(), TokenOut.decimals));
 
   const uncheckedTrade = Trade.createUncheckedTrade({
     route,
