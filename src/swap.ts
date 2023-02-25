@@ -9,7 +9,7 @@ export
 const Provider = new ethers.JsonRpcProvider(secret.rpcUrl);
 
 export
-const ChainId = 1;
+const ChainId = 5;
 
 export
 const POOL_FACTORY_CONTRACT_ADDRESS = '0x1F98431c8aD98523631AE4a59f267346ea31F984';
@@ -23,7 +23,7 @@ const PoolFee = 500;
 export
 const TokenIn = new Token(
   ChainId,
-  '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+  '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
   18,
   'WETH',
   'Wrapped Ether',
@@ -32,10 +32,10 @@ const TokenIn = new Token(
 export
 const TokenOut = new Token(
   ChainId,
-  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  6,
-  'USDC',
-  'USD Coin',
+  '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+  18,
+  'UNI',
+  'Uniswap',
 );
 
 export
