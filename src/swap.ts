@@ -116,14 +116,13 @@ async function getOutputQuote(route: Route<Currency, Currency>) {
 
 export async function getTokenTransferApproval(token: Token) {
   const tokenContract = ERC20_Contract(token);
-  const transaction = await tokenContract.populateTransaction.approve(
+  const transaction = await tokenContract.approve.populateTransaction(
     SWAP_ROUTER_ADDRESS,
     ethers.parseUnits('10', token.decimals).toString(),
   );
-
-  return sendTransaction({
+  return await Wallet.sendTransaction({
     ...transaction,
-    from: address,
+    from: Wallet.address,
   });
 }
 
@@ -148,6 +147,8 @@ async function main() {
   });
 
   console.log(uncheckedTrade);
+  const a = await getTokenTransferApproval(TokenIn);
+  console.log(a);
 }
 
 main();
