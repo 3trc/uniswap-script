@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
+import ERC20_ABI from '@openzeppelin/contracts/build/contracts/ERC20.json';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
 import { computePoolAddress, Pool, Route, SwapQuoter, Trade } from '@uniswap/v3-sdk';
 
@@ -9,6 +10,9 @@ export
 const Provider = new ethers.JsonRpcProvider(secret.rpcUrl);
 
 export
+const Wallet = new ethers.Wallet(secret.privateKey, Provider);
+
+export
 const ChainId = 5;
 
 export
@@ -16,6 +20,9 @@ const POOL_FACTORY_CONTRACT_ADDRESS = '0x1F98431c8aD98523631AE4a59f267346ea31F98
 
 export
 const QUOTER_CONTRACT_ADDRESS = '0x61fFE014bA17989E743c5F6cB21bF9697530B21e';
+
+export
+const SWAP_ROUTER_ADDRESS = '0xE592427A0AEce92De3Edee1F18E0157C05861564';
 
 export
 const PoolFee = 500;
@@ -30,6 +37,12 @@ const TokenIn = new Token(
 );
 
 export
+const ERC20_Contract = (token: Token) => new ethers.Contract(token.address, ERC20_ABI.abi, Wallet);
+
+export
+const TokenInContract = ERC20_Contract(TokenIn);
+
+export
 const TokenOut = new Token(
   ChainId,
   '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
@@ -37,6 +50,9 @@ const TokenOut = new Token(
   'UNI',
   'Uniswap',
 );
+
+export
+const TokenOutContract = ERC20_Contract(TokenOut);
 
 export
 const PoolContract = new ethers.Contract(
@@ -96,6 +112,19 @@ async function getOutputQuote(route: Route<Currency, Currency>) {
   });
 
   return new ethers.AbiCoder().decode(['uint256'], quoteCallReturnData);
+}
+
+export async function getTokenTransferApproval(token: Token) {
+  const tokenContract = ERC20_Contract(token);
+  const transaction = await tokenContract.populateTransaction.approve(
+    SWAP_ROUTER_ADDRESS,
+    ethers.parseUnits('10', token.decimals).toString(),
+  );
+
+  return sendTransaction({
+    ...transaction,
+    from: address,
+  });
 }
 
 async function main() {
