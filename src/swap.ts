@@ -1,8 +1,8 @@
 import { ethers } from 'ethers';
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core';
 import ERC20_ABI from '@openzeppelin/contracts/build/contracts/ERC20.json';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import { computePoolAddress, Pool, Route, SwapQuoter, Trade } from '@uniswap/v3-sdk';
+import { computePoolAddress, Pool, Route, SwapOptions, SwapQuoter, SwapRouter, Trade } from '@uniswap/v3-sdk';
 
 const secret = require('../.secret.json');
 
@@ -23,6 +23,12 @@ const QUOTER_CONTRACT_ADDRESS = '0x61fFE014bA17989E743c5F6cB21bF9697530B21e';
 
 export
 const SWAP_ROUTER_ADDRESS = '0xE592427A0AEce92De3Edee1F18E0157C05861564';
+
+export
+const MAX_PRIORITY_FEE_PER_GAS = 100000000000;
+
+export
+const MAX_FEE_PER_GAS = 100000000000
 
 export
 const PoolFee = 500;
@@ -147,8 +153,29 @@ async function main() {
   });
 
   console.log(uncheckedTrade);
-  const a = await getTokenTransferApproval(TokenIn);
-  console.log(a);
+
+  const options: SwapOptions = {
+    slippageTolerance: new Percent(50, 10_000), // 50 bips, or 0.50%
+    deadline: Math.floor(Date.now() / 1000) + 60 * 20, // 20 minutes from the current Unix time
+    recipient: Wallet.address,
+  };
+
+  const methodParameters = SwapRouter.swapCallParameters([uncheckedTrade], options);
+
+  const tx = {
+    data: methodParameters.calldata,
+    to: SWAP_ROUTER_ADDRESS,
+    value: methodParameters.value,
+    from: Wallet.address,
+    maxFeePerGas: MAX_FEE_PER_GAS,
+    maxPriorityFeePerGas: MAX_PRIORITY_FEE_PER_GAS,
+  };
+  
+  console.log('发送Swap交易...');
+  const res = await Wallet.sendTransaction(tx);
+  console.log(res);
+  // const a = await getTokenTransferApproval(TokenIn);
+  // console.log(a);
 }
 
 main();
