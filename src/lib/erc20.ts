@@ -38,4 +38,12 @@ class ERC20 {
   public async balanceOf(address: string) {
     return await this.contract.balanceOf(address);
   }
+
+  public async allowance(owner: string, spender: string) {
+    return await this.contract.allowance(owner, spender);
+  }
+
+  public async approve(spender: string, amount: ethers.BigNumberish) {
+    return await this.contract.approve(spender, amount);
+  }
 }
