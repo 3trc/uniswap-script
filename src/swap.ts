@@ -174,6 +174,8 @@ async function main() {
   console.log('发送Swap交易...');
   const res = await Wallet.sendTransaction(tx);
   console.log(res);
+  const r = res.wait();
+  console.log('结束');
   // const a = await getTokenTransferApproval(TokenIn);
   // console.log(a);
 }
