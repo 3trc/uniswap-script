@@ -4,6 +4,17 @@ import { ethers } from 'ethers';
 import { ContractRunner } from 'ethers/types/providers';
 
 export
+async function CreateERC20(address: string, chainId: number, runner: ContractRunner) {
+  const contract = new ethers.Contract(address, ERC20_ABI.abi, runner);
+  const [symbol, name, decimals]: [string, string, bigint] = await Promise.all([
+    contract.symbol(),
+    contract.name(),
+    contract.decimals(),
+  ]);
+  return new ERC20(runner, chainId, address, Number(decimals), symbol, name);
+}
+
+export
 class ERC20 {
   public constructor(
     private runner: ContractRunner,
