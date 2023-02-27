@@ -134,6 +134,10 @@ export async function getTokenTransferApproval(token: Token) {
 }
 
 async function main() {
+  // console.log(1);
+  // const a = await Provider.getBlock('latest');
+  // console.log(2);
+  // return;
   const route = await GetRoute();
   // console.log(route);
   const amountOut = await getOutputQuote(route);
