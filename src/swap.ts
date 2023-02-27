@@ -1,3 +1,4 @@
+import 'global-agent/bootstrap';
 import { ethers } from 'ethers';
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core';
 import ERC20_ABI from '@openzeppelin/contracts/build/contracts/ERC20.json';
