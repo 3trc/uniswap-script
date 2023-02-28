@@ -15,8 +15,9 @@ async function main() {
   console.log(pool);
   const route = createRoute(pool, tokenIn, tokenOut);
   console.log(route);
-  const a = await getOutputQuote(tokenIn, '1', route);
-  console.log(a);
+  const amount = await getOutputQuote(tokenIn, '1', route);
+  console.log(amount);
+  console.log(tokenOut.Format(amount));
 }
 
 main();
