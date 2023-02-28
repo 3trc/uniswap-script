@@ -1,5 +1,5 @@
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import { computePoolAddress, Pool } from '@uniswap/v3-sdk';
+import { computePoolAddress, Pool, Route } from '@uniswap/v3-sdk';
 import { ethers } from 'ethers';
 import { ERC20 } from './erc20';
 import { Wallet } from './runner';
@@ -41,3 +41,12 @@ async function createPool(
     Number(slot0[1]),
   );
 };
+
+export
+function createRoute(
+  pool: Pool,
+  tokenIn: ERC20,
+  tokenOut: ERC20,
+) {
+  return new Route([pool], tokenIn.Token, tokenOut.Token);
+}
