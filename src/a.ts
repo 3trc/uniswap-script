@@ -16,6 +16,12 @@ async function main() {
   const trade = createTrade(tokenIn, amountIn, tokenOut, amountOut, route);
   const txn = createTradeTransaction(trade);
   console.log(txn);
+  console.log('发送交易...');
+  const trsp = await Wallet.sendTransaction(txn);
+  console.log(trsp);
+  console.log('确认交易...');
+  const trcp = await trsp.wait();
+  console.log('结束');
 }
 
 main();
