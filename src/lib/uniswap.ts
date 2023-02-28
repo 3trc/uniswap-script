@@ -1,6 +1,6 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core';
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import { computePoolAddress, Pool, Route, SwapQuoter, Trade } from '@uniswap/v3-sdk';
+import { computePoolAddress, Pool, Route, SwapOptions, SwapQuoter, SwapRouter, Trade } from '@uniswap/v3-sdk';
 import { ethers } from 'ethers';
 import { ERC20 } from './erc20';
 import { Provider, Wallet } from './runner';
@@ -10,6 +10,12 @@ const POOL_FACTORY_CONTRACT_ADDRESS = '0x1F98431c8aD98523631AE4a59f267346ea31F98
 const POOL_FEE = 500;
 
 const QUOTER_CONTRACT_ADDRESS = '0x61fFE014bA17989E743c5F6cB21bF9697530B21e';
+
+const MAX_PRIORITY_FEE_PER_GAS = 100000000000;
+
+const MAX_FEE_PER_GAS = 100000000000;
+
+const SWAP_ROUTER_ADDRESS = '0xE592427A0AEce92De3Edee1F18E0157C05861564';
 
 export
 function createPoolContract(tokenIn: ERC20, tokenOut: ERC20) {
@@ -89,4 +95,22 @@ function createTrade(
     outputAmount: CurrencyAmount.fromRawAmount(tokenOut.Token, amountOut.toString()),
     tradeType: 0,
   });
+}
+
+export
+function createTradeTransaction(trade: Trade<Currency, Currency, 0>) {
+  const options: SwapOptions = {
+    slippageTolerance: new Percent(50, 10_000),
+    deadline: Math.floor(Date.now() / 1000) + 60 * 20,
+    recipient: Wallet.address,
+  };
+  const methodParameters = SwapRouter.swapCallParameters([trade], options);
+  return {
+    data: methodParameters.calldata,
+    to: SWAP_ROUTER_ADDRESS,
+    value: methodParameters.value,
+    from: Wallet.address,
+    maxFeePerGas: MAX_FEE_PER_GAS,
+    maxPriorityFeePerGas: MAX_PRIORITY_FEE_PER_GAS,
+  };
 }
