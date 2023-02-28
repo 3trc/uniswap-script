@@ -35,12 +35,20 @@ class ERC20 {
     return this.contract;
   }
 
+  public Format(value: ethers.BigNumberish) {
+    return ethers.formatUnits(value, this.token.decimals);
+  }
+
+  public Parse(value: string) {
+    return ethers.parseUnits(value, this.token.decimals);
+  }
+
   public async balanceOf(address: string) {
-    return await this.contract.balanceOf(address);
+    return await this.contract.balanceOf(address) as bigint;
   }
 
   public async allowance(owner: string, spender: string) {
-    return await this.contract.allowance(owner, spender);
+    return await this.contract.allowance(owner, spender) as bigint;
   }
 
   public async approve(spender: string, amount: ethers.BigNumberish) {
