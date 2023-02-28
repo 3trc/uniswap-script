@@ -1,7 +1,7 @@
 import 'global-agent/bootstrap';
 import { createERC20 } from './lib/erc20';
 import { Wallet } from './lib/runner';
-import { createPoolContract, createPool, createRoute } from './lib/uniswap';
+import { createPoolContract, createPool, createRoute, getOutputQuote } from './lib/uniswap';
 
 async function main() {
   const [tokenIn, tokenOut] = await Promise.all([
@@ -15,6 +15,8 @@ async function main() {
   console.log(pool);
   const route = createRoute(pool, tokenIn, tokenOut);
   console.log(route);
+  const a = await getOutputQuote(tokenIn, '1', route);
+  console.log(a);
 }
 
 main();

@@ -72,5 +72,5 @@ async function getOutputQuote(
     to: QUOTER_CONTRACT_ADDRESS,
     data: calldata,
   });
-  return new ethers.AbiCoder().decode(['uint256'], quoteCallReturnData);
+  return new ethers.AbiCoder().decode(['uint256'], quoteCallReturnData)[0] as bigint;
 }
