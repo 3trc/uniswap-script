@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core';
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
-import { computePoolAddress, Pool, Route, SwapQuoter } from '@uniswap/v3-sdk';
+import { computePoolAddress, Pool, Route, SwapQuoter, Trade } from '@uniswap/v3-sdk';
 import { ethers } from 'ethers';
 import { ERC20 } from './erc20';
 import { Provider, Wallet } from './runner';
@@ -57,12 +57,12 @@ function createRoute(
 export
 async function getOutputQuote(
   tokenIn: ERC20,
-  amount: string,
+  amountIn: bigint,
   route: Route<Currency, Currency>,
 ) {
   const { calldata } = await SwapQuoter.quoteCallParameters(
     route,
-    CurrencyAmount.fromRawAmount(tokenIn.Token, tokenIn.Parse(amount).toString()),
+    CurrencyAmount.fromRawAmount(tokenIn.Token, amountIn.toString()),
     0,
     {
       useQuoterV2: true,
@@ -73,4 +73,20 @@ async function getOutputQuote(
     data: calldata,
   });
   return new ethers.AbiCoder().decode(['uint256'], quoteCallReturnData)[0] as bigint;
+}
+
+export
+function createTrade(
+  tokenIn: ERC20,
+  amountIn: bigint,
+  tokenOut: ERC20,
+  amountOut: bigint,
+  route: Route<Currency, Currency>,
+) {
+  return Trade.createUncheckedTrade({
+    route,
+    inputAmount: CurrencyAmount.fromRawAmount(tokenIn.Token, amountIn.toString()),
+    outputAmount: CurrencyAmount.fromRawAmount(tokenOut.Token, amountOut.toString()),
+    tradeType: 0,
+  });
 }
