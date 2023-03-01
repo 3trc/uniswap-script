@@ -8,8 +8,8 @@ async function main() {
     createERC20('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 5, Wallet),
     createERC20('0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', 5, Wallet),
   ]);
-  // const a = await tokenIn.approve('0x000000000022d473030f116ddee9f6b43ac78ba3', 0);
-  // const b = await tokenOut.approve('0x000000000022d473030f116ddee9f6b43ac78ba3', 0);
+  // const a = await tokenIn.approve('0xE592427A0AEce92De3Edee1F18E0157C05861564', tokenIn.Parse('100'));
+  // const b = await tokenOut.approve('0xE592427A0AEce92De3Edee1F18E0157C05861564', tokenOut.Parse('1000'));
   // console.log(a, b);
   // return;
   const amountIn = tokenIn.Parse('1');
