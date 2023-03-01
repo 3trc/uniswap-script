@@ -21,6 +21,7 @@ async function main() {
   console.log(trsp);
   console.log('确认交易...');
   const trcp = await trsp.wait();
+  console.log(trcp);
   console.log('结束');
 }
 
