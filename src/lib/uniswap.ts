@@ -110,7 +110,7 @@ function createTradeTransaction(trade: Trade<Currency, Currency, 0>) {
     to: SWAP_ROUTER_ADDRESS,
     value: methodParameters.value,
     from: Wallet.address,
-    maxFeePerGas: MAX_FEE_PER_GAS,
-    maxPriorityFeePerGas: MAX_PRIORITY_FEE_PER_GAS,
+    // maxFeePerGas: MAX_FEE_PER_GAS,
+    // maxPriorityFeePerGas: MAX_PRIORITY_FEE_PER_GAS,
   };
 }
