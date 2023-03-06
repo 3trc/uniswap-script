@@ -6,11 +6,12 @@ import { createPoolContract, createPool, createRoute, getOutputQuote, createTrad
 async function trade(
   assets: ERC20,
   funds: ERC20,
-  amountIn: bigint,
   side: 'buy' | 'sell',
+  amount?: bigint,
 ) {
   const tokenIn = side === 'buy' ? funds : assets;
   const tokenOut = side === 'buy' ? assets : funds;
+  const amountIn = amount || await tokenIn.balanceOf(Wallet.address);
   const poolContract = createPoolContract(tokenIn, tokenOut);
   const pool = await createPool(poolContract, tokenIn, tokenOut);
   const route = createRoute(pool, tokenIn, tokenOut);
@@ -35,8 +36,8 @@ async function main() {
     createERC20('0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 5, Wallet),
     createERC20('0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', 5, Wallet),
   ]);
-  const tokenInBalance = await WETH.balanceOf(Wallet.address);
-  trade(UNI, WETH, tokenInBalance, 'buy');
+  const tokenInBalance = await UNI.balanceOf(Wallet.address);
+  trade(UNI, WETH, 'sell');
 }
 
 main();
