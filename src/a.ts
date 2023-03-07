@@ -1,6 +1,6 @@
 import 'global-agent/bootstrap';
 import { createERC20, ERC20 } from './lib/erc20';
-import { Wallet } from './lib/runner';
+// import { Wallet } from './lib/runner';
 import { createPoolContract, createPool, createRoute, getOutputQuote, createTrade, createTradeTransaction } from './lib/uniswap';
 
 async function trade(
@@ -11,7 +11,7 @@ async function trade(
 ) {
   const tokenIn = side === 'buy' ? funds : assets;
   const tokenOut = side === 'buy' ? assets : funds;
-  const amountIn = amount !== 'all' ? amount : await tokenIn.balanceOf(Wallet.address);
+  const amountIn = amount !== 'all' ? amount : await tokenIn.balanceOf(tokenIn.Wallet.address);
   const poolContract = createPoolContract(tokenIn, tokenOut);
   const pool = await createPool(poolContract, tokenIn, tokenOut);
   const route = createRoute(pool, tokenIn, tokenOut);
@@ -25,7 +25,7 @@ async function trade(
   );
   const data = createTradeTransaction(trade);
   console.log('发送交易...');
-  const trsp = await Wallet.sendTransaction(data);
+  const trsp = await tokenIn.Wallet.sendTransaction(data);
   console.log('确认交易...');
   const trcp = await trsp.wait();
   console.log('结束');
