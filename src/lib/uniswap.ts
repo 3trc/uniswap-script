@@ -27,7 +27,7 @@ function createPoolContract(tokenIn: ERC20, tokenOut: ERC20) {
       fee: POOL_FEE,
     }),
     IUniswapV3PoolABI.abi,
-    Wallet,
+    tokenIn.Wallet,
   );
 }
 
